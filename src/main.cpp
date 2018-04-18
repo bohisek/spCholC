@@ -25,11 +25,15 @@ int main() {
 	float ecc[nDV+2*Np] = {0,0,0,0,49,38,40,40,59,40,30,40,66,24,40,40,83,40,40,40,0,0,0,0};
 	float eww[nDV+1]    = {0,-2,-2,-5,0,-3,-2,-2,0,-7,-2,-2,0,-6,-2,-2,0};
 	float ess[nDV+Np]   = {0,0,0,0,-9,-2,-2,-10,-2,-2,-11,-2,-2,-2,-2,-2,0,0,0,0};
+	float rhs[nDV+2*Np] = {0,0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,0,0,0,0};
 
 	float L[nDV * (Np+1)] = {};
+    float x[nDV+2*Np] = {};
 
 	spChol(L,ecc,eww,ess,Np,nDV);
-    printChol(L,Np,nDV);
+    solve(x,L,rhs,Np,nDV); // direct solve
+    //printChol(L,Np,nDV);
+    //printX(x,Np,nDV);
 
 	return 0;
 }
