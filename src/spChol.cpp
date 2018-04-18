@@ -57,6 +57,36 @@ void spChol(float *L,const float *ecc,const float *eww,const float *ess,const in
 		}
 }
 
+void solve(float *x,const float *L,const float *b,const int Np,const int nDV)
+{
+	// forward sweep
+	for (int i=0; i<nDV; i++)
+	{
+		x[i+Np] = b[i+Np];
+		int ixm = min(Np,i);
+
+		for (int j=0; j<ixm; j++)
+		{
+			int jr = int(max(i-Np, 0)) + j;
+			int jy = ixm - j;
+			int idL = jr + nDV * jy;
+			x[i+Np] -= L[idL] * x[jr+Np];
+		}
+		x[i+Np] /= L[i];
+	}
+
+	// back sweep
+	for (int i=nDV-1; i>=0; i--)
+	{
+		for (int j=0; j<Np; j++)
+		{
+			int idL = i + nDV * (j+1);
+			x[i+Np] -= L[idL] * x[i+j+1+Np];
+		}
+		x[i+Np] /= L[i];
+	}
+}
+
 void printChol(const float *L,const int Np,const int nDV)
 {
 	for (int i=0; i<nDV; i++)
@@ -68,6 +98,14 @@ void printChol(const float *L,const int Np,const int nDV)
 		}
 		cout << endl;
 	}
+}
+
+void printX(const float *x,const int Np,const int nDV)
+{
+	for (int i=0; i<nDV; i++)
+		{
+			cout << x[i+Np] << endl;
+		}
 }
 
 
